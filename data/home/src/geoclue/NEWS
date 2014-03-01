@@ -1,0 +1,243 @@
+2.1.4
+=====
+
+- Don't depend on unreleased libnm-glib.
+
+All contributors to this release:
+
+Zeeshan Ali (Khattak) <zeeshanak@gnome.org>
+
+2.1.3
+=====
+
+- Agents can now dictate maximum accuracy level allowed for all clients through
+  a D-Bus property. The next version of gnome-shell will make use of that and
+  provide an option to enable/disable geolocation in topbar menu.
+- Add D-Bus property to specify available accuracy level. For now we just
+  hardcode it to report that we can provide exact accuracy.
+- Give agents time to register themselves on startup before processing client
+  requests.
+- Move configuration file under geoclue subdir so that in future we can easily
+  add more configuration files if needed.
+- Fixes to build.
+- Some internal clean-ups.
+
+All contributors to this release:
+
+Colin Walters <walters@verbum.org>
+Marvin Schmidt <marv@exherbo.org>
+Zeeshan Ali (Khattak) <zeeshanak@gnome.org>
+
+2.1.2
+=====
+
+- Fix some crashing bugs.
+- Ignore WiFis with '_nomap' suffix.
+- Configure options for disabling WiFi, 3G and GPS modem sources.
+- Avoid spaming the network resources for ignorable changes to network setup.
+- Add some required files to distribution that we forgot in last release.
+
+All contributors to this release:
+
+Kalev Lember <kalevlember@gmail.com>
+Ryan Lortie <desrt@desrt.ca>
+Zeeshan Ali (Khattak) <zeeshanak@gnome.org>
+
+2.1.1
+=====
+
+- 3GPP-based geolocation source.
+  - Uses ModemManager to get cell tower info from 3GPP modem and uses
+    opencellid.org's public API to translate that into a location.
+- GPS modem-based geolocation source: If your 3GPP modem has a GPS, geoclue can
+  now make use of it.
+- WiFi-based geolocation source
+  - Uses Mozilla Location Service to find location based on nearby WiFi
+    networks.
+  - Refresh location on changes in WiFi networks.
+  - Option in configuration file to make geoclue use Google Maps Geolocation API
+    rather than Mozilla Location Service.
+  - Option in configuration file to enable submission of wifi data to Mozilla
+    Location Service. If this option is enabled, the data is submitted each time
+    geoclue gets a GPS lock. That means, its not completely autonomous and data
+    is only submitted if an application, e.g gnome-maps requests current
+    location with exact accuracy.
+- API for clients to specify what level of geolocation accuracy they need,
+  e.g city-level, street-level or exact etc.
+- API to check if geolocation service is in use. Next version of gnome-shell
+  will make use of that to show an icon in the panel to indicate to user that
+  their location is being accessed.
+- Application authorization agent
+  - Make agent completely optional. We will revert this once we have a reliable
+    mechanism to identify applications.
+  - Identify agent and client applications by their desktop IDs rather than
+    paths of their binaries.
+  - Ability for agents to dictate the accuracy level allowed for clients.
+  - Maintain a whitelist of clients in configuration that do not need agent
+    authorization.
+- Avoid redundant queries to web services.
+- Install demo applications and provide a desktop file for them.
+- Many more internal fixes and clean-ups.
+
+Dependency-related changes:
+
+- Require libnm-glib >= 0.9.9.0 (new dependency)
+- Require libmm-glib >= 1.0 (new dependency)
+- Require libxml-2.0 (new dependency)
+
+Note to package maintainers: This version drops the requirement for geoclue
+binary to be given 'ptrace' capability that was introduced in last release,
+2.1.0.
+
+All contributors to this release:
+
+Zeeshan Ali (Khattak) <zeeshanak@gnome.org>
+
+2.1.0
+=====
+
+- Application authentication agents support:
+  - API for agents to register themselves.
+  - API that agents need to implement.
+  - configure option to enable requirement of authorization from agent. Until
+    there is at least one agent out there, this requirement is disabled by
+    default.
+  - A demo agent.
+  - Option in ${sysconfdir}/geoclue.conf containing whitelist of all our agents.
+- Don't use proxy. Seems proxy settings are per-user and system users (which
+  geoclue is supposed to run as) do not have access to them.
+- Add support for bus-activation via systemd service unit.
+- Add mandatory 'DesktopId' property to Client interface.
+- Use HTTPS to connect to geoip.fedoraproject.org. The actual resource is behind
+  HTTPS so using HTTP leads to redirections and thefore redundant TCP packets.
+- Fixes to build system.
+
+Note to package maintainers: For the agent support to work, geoclue binary
+need 'ptrace' capability. In near future we will try to get this through systemd
+so systemd-based distributions likely not need to bother about it. Having said
+that, for this release you can simply keep the agent requirement disabled.
+
+All contributors to this release:
+
+Colin Guthrie <colin@mageia.org>
+Colin Walters <walters@verbum.org>
+Kalev Lember <kalevlember@gmail.com>
+Philip Withnall <philip@tecnocode.co.uk>
+Stefan Bernhardsgrütter <s.bernhardsgruetter@gmail.com>
+Zeeshan Ali (Khattak) <zeeshanak@gnome.org>
+
+2.0.0
+=====
+
+- Generate docs for D-Bus interface. Online version:
+  http://www.freedesktop.org/software/geoclue/docs/
+- Fix build against Automake 1.13.
+- Two minor fixes/cleanups.
+
+All contributors to this release:
+
+Zeeshan Ali (Khattak) <zeeshanak@gnome.org>
+
+1.99.4
+======
+
+- Correct check for whether db needs update in geoip-update.
+- Fix geoip-update by direct usage of libsoup for HTTP GET.
+- Don't inhibit compiler warnings in build.
+- Fix various potential crashers.
+- Take 'DistanceThreshold' property into account.
+- Watch for and signal out location changes.
+- Add configure option to specify service user.
+- Add documentation comments to D-Bus interface XML.
+- Fix various compiler warnings.
+- Switch to Fedora's geoip server until we've our server setup.
+- Minor fixes to pkgconfig file.
+- Setup a glib log domain.
+- Some optimizations.
+- More debug logging.
+
+Dependency-related changes:
+
+- Require libsoup-2.4
+
+All contributors to this release:
+
+Bastien Nocera <hadess@hadess.net>
+Dominique Leuenberger <dimstar@opensuse.org>
+Kalev Lember <kalevlember@gmail.com>
+Stefan Sauer <ensonic@users.sf.net>
+Zeeshan Ali (Khattak) <zeeshanak@gnome.org>
+
+1.99.3
+======
+
+- All D-Bus prop names capitalized as per general conventions.
+- Expose D-Bus specification XML file in pkg-config file.
+- Fix some potential crashes in error handling code.
+- Remove unused build-time yelp dependency.
+- Correct the libsoup dependency in pkg-config (although it doesn't affect any
+  applications at the moment).
+- Fix some compiler warnings.
+
+All contributors to this release:
+
+Evgeny Bobkin <evgen.ibqn@gmail.com>
+Guillaume Desmottes <guillaume.desmottes@collabora.co.uk>
+Kalev Lember <kalevlember@gmail.com>
+Zeeshan Ali (Khattak) <zeeshanak@gnome.org>
+
+1.99.2
+======
+
+- Drop client-side library.
+- Add COPYING file.
+- Install geoip-lookup with make install. This makes life easier for binary
+  distributions that can then ship geoip-lookup in a package.
+- Distribute server documentation.
+- Distribute & install interface XML file.
+- Add/update forgotten copyright headers.
+
+All contributors to this release:
+
+Kalev Lember <kalevlember@gmail.com>
+Zeeshan Ali (Khattak) <zeeshanak@gnome.org>
+
+1.99.1
+======
+
+- Move to system D-Bus.
+- Import geoip code from geocode-glib.
+- Add option to automatically exit on inactivity. By default it:
+  - Runs indefinitely when launched manually.
+  - Exits after 5 seconds of inactivity when (auto)launched by D-Bus.
+- Relicense from LGPLv2+ to GPLv2+.
+- Some build/installation related fixes.
+- Correctly version pkg-config file.
+- Fix crash on error.
+- Add --version cmdline option.
+
+Dependency-related changes:
+
+- Remove redundant GOA dep from pkg-config.
+- Drop dependency on geocode-glib.
+- New dependencies:
+  - json-glib-1.0 >= 0.14
+  - libsoup-2.4
+  - geoip >= 1.5.1 (Only needed by geoip server)
+
+All contributors to this release:
+
+Bastien Nocera <hadess@hadess.net>
+Colin Walters <walters@verbum.org>
+Zeeshan Ali (Khattak) <zeeshanak@gnome.org>
+
+1.99.0
+======
+
+- Bump the version number
+
+0.0.1
+=====
+
+- First release (of geoclue2)
+
