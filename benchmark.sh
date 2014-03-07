@@ -70,7 +70,7 @@ function run_benchmark_command() {
     fi
 
     for i in $(seq 1 $REPETITIONS); do
-        { time $cmd; } 2>> "$res"
+        { time $cmd; } 2>&1 | sed -n 's/real[ \t]*//p' >> "$res"
         rm "$out"
     done
 }
