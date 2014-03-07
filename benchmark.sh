@@ -26,6 +26,20 @@ function install_bzip2() {
     cd -
 }
 
+function install_imagemagick()
+{
+    srcdir="$1"
+    prefix="$2"
+    
+    url="http://www.imagemagick.org/download/ImageMagick.tar.gz"
+    wget $url -O - | tar -xzf - -C "$srcdir"
+    
+    cd src/ImageMagick-6.8.8-7
+    ./configure --prefix="$prefix"
+    make && make install
+    cd -
+}
+
 function install_ffmpeg() {
     srcdir="$1"
     prefix="$2"
@@ -127,6 +141,7 @@ if [ ! -d src -o ! -d prefix ]; then
     install_bzip2 "$PWD/src" "$PWD/prefix"
     install_ffmpeg "$PWD/src" "$PWD/prefix"
     install_gpg "$PWD/src" "$PWD/prefix"
+    install_imagemagick "$PWD/src" "$PWD/prefix"
 fi
 
 echo $RESULTSD
