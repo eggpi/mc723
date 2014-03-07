@@ -155,3 +155,4 @@ benchmark_gpg_encrypt prefix/bin/gpg data/home.tar
 benchmark_wav_to_mp3 prefix/bin/lame data/dracula_01_stoker.wav
 benchmark_bzip2_compress prefix/bin/bzip2 data/home.tar
 benchmark_ogv_to_mp4 prefix/bin/ffmpeg data/elephants_dream1.ogv
+benchmark_png_to_jpeg prefix/bin data/imagem.png
