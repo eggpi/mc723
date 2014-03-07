@@ -51,6 +51,10 @@ function run_benchmark_command() {
     out="$2"
     res="$3"
 
+    if [ -f "$out" ]; then
+        rm -f "$out"
+    fi
+
     for i in $(seq 1 $REPETITIONS); do
         { time $cmd; } 2>> "$res"
         rm "$out"
@@ -90,10 +94,6 @@ function benchmark_ogv_to_mp4() {
     mp4="${ogv%%.ogv}.mp4"
     results="$RESULTSD/ogv_to_mp4"
 
-    if [ -f "$mp4" ]; then
-        rm "$mp4"
-    fi
-
     run_benchmark_command \
         "$ffmpeg -v quiet -i $ogv -strict -2 $mp4" \
         "$mp4" \
@@ -106,10 +106,6 @@ function benchmark_gpg_encrypt() {
     data="$PWD/$2"
     encrypted="${data}.asc"
     results="$PWD/$RESULTSD/gpg_encrypt"
-
-    if [ -f "$encrypted" ]; then
-        rm "$encrypted"
-    fi
 
     passphrase=$(mktemp)
     echo secret passphrase > "$passphrase"
