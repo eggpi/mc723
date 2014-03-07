@@ -38,7 +38,7 @@ function install_imagemagick()
     ./configure --prefix="$prefix"
     make && makeinstall
     cd -
-    
+}
 
 function install_ffmpeg() {
     srcdir="$1"
