@@ -34,7 +34,7 @@ function install_imagemagick()
     url="http://www.imagemagick.org/download/ImageMagick.tar.gz"
     wget $url -O - | tar -xzf - -C "$srcdir"
     
-    cd src/ImageMagick-6.8.8
+    cd src/ImageMagick-6.8.8-7
     ./configure --prefix="$prefix"
     make && makeinstall
     cd -
