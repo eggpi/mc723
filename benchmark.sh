@@ -134,6 +134,18 @@ function benchmark_gpg_encrypt() {
     cd "$OLDPWD"
 }
 
+function benchmark_png_to_jpeg() {
+    convert="$1"
+    img="$2"
+    jpeg="${img%%.png}.jpeg"
+    results="$RESULTSD/png_to_jpeg"
+
+    run_benchmark_command \
+        "$convert $img $jpeg" \
+        "$jpeg" \
+        "$results"
+}
+
 if [ ! -d src -o ! -d prefix ]; then
     rm -rfv src && mkdir src
     rm -rfv prefix && mkdir prefix{,/bin}
