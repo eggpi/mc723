@@ -97,7 +97,7 @@ function benchmark_bzip2_compress() {
     results="$RESULTSD/bzip2"
 
     run_benchmark_command \
-        "bzip2 -k $in" \
+        "$bzip2 -k $in" \
         "$in.bz2" \
         "$results"
 }
