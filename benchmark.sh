@@ -34,6 +34,17 @@ function install_ffmpeg() {
     wget $url -O - | tar -xzf - -C "$prefix/bin"
 }
 
+function install_gpg() {
+    srcdir="$1"
+    prefix="$2"
+    url="http://ftp.us.debian.org/debian/pool/main/g/gnupg/gnupg_1.4.12-7+deb7u3_amd64.deb"
+
+    cd "$srcdir"
+    wget $url -O gnupg_1.4.12.deb
+    ar x gnupg_1.4.12.deb data.tar.gz
+    tar --strip-components=2 -C "$prefix" -xzf data.tar.gz ./usr/bin/gpg
+    cd "$OLDPWD"
+}
 
 function run_benchmark_command() {
     cmd="$1"
@@ -89,12 +100,37 @@ function benchmark_ogv_to_mp4() {
         "$results"
 }
 
+function benchmark_gpg_encrypt() {
+    # gpg fails unless called from inside prefix/bin
+    prefix=$(dirname "$1")
+    data="$PWD/$2"
+    encrypted="${data}.asc"
+    results="$PWD/$RESULTSD/gpg_encrypt"
+
+    if [ -f "$encrypted" ]; then
+        rm "$encrypted"
+    fi
+
+    passphrase=$(mktemp)
+    echo secret passphrase > "$passphrase"
+
+    cd "$prefix"
+    run_benchmark_command \
+        "gpg -q --passphrase-file $passphrase --symmetric -a $data" \
+        "$encrypted" \
+        "$results"
+
+    rm "$passphrase"
+    cd "$OLDPWD"
+}
+
 if [ ! -d src -o ! -d prefix ]; then
     rm -rfv src && mkdir src
     rm -rfv prefix && mkdir prefix{,/bin}
     install_lame "$PWD/src" "$PWD/prefix"
     install_bzip2 "$PWD/src" "$PWD/prefix"
     install_ffmpeg "$PWD/src" "$PWD/prefix"
+    install_gpg "$PWD/src" "$PWD/prefix"
 fi
 
 echo $RESULTSD
@@ -103,6 +139,8 @@ if [ -d "$RESULTSD" ]; then
 fi
 
 mkdir "$RESULTSD"
+tar -c data/home/* -f data/home.tar
+benchmark_gpg_encrypt prefix/bin/gpg data/home.tar
 benchmark_wav_to_mp3 prefix/bin/lame data/shsof1601.wav
-benchmark_bzip2_compress prefix/bin/bzip2 data/sample.tar
+benchmark_bzip2_compress prefix/bin/bzip2 data/home.tar
 benchmark_ogv_to_mp4 prefix/bin/ffmpeg data/elephants_dream1.ogv
