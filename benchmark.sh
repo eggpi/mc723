@@ -134,15 +134,14 @@ function benchmark_gpg_encrypt() {
     cd "$OLDPWD"
 }
 
-function benchmark_png_to_jpeg() {
+function benchmark_jpg_to_png() {
     convert="$1"
     img="$2"
-    jpeg="${img%%.png}.jpeg"
-    results="$RESULTSD/png_to_jpeg"
+    results="$RESULTSD/jpg_to_png"
 
     run_benchmark_command \
-        "$convert -format jpeg $img" \
-        "$jpeg" \
+        "$convert -format png data/*.jpg" \
+        "$png" \
         "$results"
 }
 
@@ -167,4 +166,4 @@ benchmark_gpg_encrypt prefix/bin/gpg data/home.tar
 benchmark_wav_to_mp3 prefix/bin/lame data/dracula_01_stoker.wav
 benchmark_bzip2_compress prefix/bin/bzip2 data/home.tar
 benchmark_ogv_to_mp4 prefix/bin/ffmpeg data/elephants_dream1.ogv
-benchmark_png_to_jpeg prefix/bin/mogrify data/*.png
+benchmark_jpg_to_png prefix/bin/mogrify data/*.jpg
