@@ -34,7 +34,7 @@ function install_imagemagick()
     url="http://www.imagemagick.org/download/ImageMagick.tar.gz"
     wget $url -O - | tar -xzf - -C "$srcdir"
     
-    cd src/ImageMagick-6.8.8-7
+    cd src/ImageMagick-6.8.8-8
     ./configure --prefix="$prefix"
     make && make install
     cd -
@@ -65,13 +65,13 @@ function run_benchmark_command() {
     out="$2"
     res="$3"
 
-    if [ -f "$out" ]; then
-        rm -f "$out"
+    if [ -f $out ]; then
+        rm -f $out
     fi
 
     for i in $(seq 1 $REPETITIONS); do
         { time $cmd; } 2>&1 | sed -n 's/real[ \t]*//p' >> "$res"
-        rm "$out"
+        rm $out
     done
 }
 
@@ -136,11 +136,12 @@ function benchmark_gpg_encrypt() {
 
 function benchmark_jpg_to_png() {
     convert="$1"
-    img="$2"
+    jpg="$2"
+    png="${jpg%%.jpg}.png"
     results="$RESULTSD/jpg_to_png"
 
     run_benchmark_command \
-        "$convert -format png data/*.jpg" \
+        "$convert -format png $jpg" \
         "$png" \
         "$results"
 }
@@ -166,4 +167,4 @@ benchmark_gpg_encrypt prefix/bin/gpg data/home.tar
 benchmark_wav_to_mp3 prefix/bin/lame data/dracula_01_stoker.wav
 benchmark_bzip2_compress prefix/bin/bzip2 data/home.tar
 benchmark_ogv_to_mp4 prefix/bin/ffmpeg data/elephants_dream1.ogv
-benchmark_jpg_to_png prefix/bin/mogrify data/*.jpg
+benchmark_jpg_to_png mogrify "data/images/*.jpg"
