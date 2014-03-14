@@ -126,7 +126,7 @@ function benchmark_gpg_encrypt() {
 
     cd "$prefix"
     run_benchmark_command \
-        "./gpg --batch -q --passphrase-file $passphrase --symmetric -a $data" \
+        "./gpg --no-use-agent --batch -q --passphrase-file $passphrase --symmetric -a $data" \
         "$encrypted" \
         "$results"
 
