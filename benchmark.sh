@@ -36,7 +36,7 @@ function install_imagemagick()
 
     cd src/ImageMagick-6.8.8-8
     ./configure --prefix="$prefix"
-    make && make install
+    make -j64 && make install
     cd -
 }
 
