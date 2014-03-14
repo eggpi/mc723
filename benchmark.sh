@@ -30,10 +30,10 @@ function install_imagemagick()
 {
     srcdir="$1"
     prefix="$2"
-    
+
     url="http://www.imagemagick.org/download/ImageMagick.tar.gz"
     wget $url -O - | tar -xzf - -C "$srcdir"
-    
+
     cd src/ImageMagick-6.8.8-8
     ./configure --prefix="$prefix"
     make && make install
