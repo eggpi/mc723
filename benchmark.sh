@@ -22,8 +22,10 @@ function install_bzip2() {
     wget $url -O - | tar -xzf - -C "$srcdir"
 
     cd src/bzip2-1.0.6
-    make && make install PREFIX="$prefix"
+    make -f Makefile-libbz2_so && make install PREFIX="$prefix"
     cd -
+
+    cd prefix/lib/; ln -sf ../../src/bzip2-1.0.6/libbz2.so.1.0 .; cd -
 }
 
 function install_imagemagick()
@@ -115,8 +117,7 @@ function benchmark_ogv_to_mp4() {
 }
 
 function benchmark_gpg_encrypt() {
-    # gpg fails unless called from inside prefix/bin
-    prefix=$(dirname "$1")
+    gpg="$1"
     data="$PWD/$2"
     encrypted="${data}.asc"
     results="$PWD/$RESULTSD/gpg_encrypt"
@@ -124,14 +125,14 @@ function benchmark_gpg_encrypt() {
     passphrase=$(mktemp)
     echo secret passphrase > "$passphrase"
 
-    cd "$prefix"
-    run_benchmark_command \
-        "./gpg --no-use-agent --batch -q --passphrase-file $passphrase --symmetric -a $data" \
+    # make sure gpg uses our libbz2
+    libdir="prefix/lib"
+    LD_LIBRARY_PATH="$libdir" run_benchmark_command \
+        "$gpg --no-use-agent --batch -q --passphrase-file $passphrase --symmetric -a $data" \
         "$encrypted" \
         "$results"
 
     rm "$passphrase"
-    cd "$OLDPWD"
 }
 
 function benchmark_jpg_to_png() {
