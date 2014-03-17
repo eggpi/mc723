@@ -46,7 +46,7 @@ function install_ffmpeg() {
     srcdir="$1"
     prefix="$2"
 
-    url="ffmpeg.gusari.org/static/64bit/ffmpeg.static.64bit.2013-10-03.tar.gz"
+    url="http://ffmpeg.gusari.org/static/64bit/ffmpeg.static.64bit.2014-03-14.tar.gz"
     wget $url -O - | tar -xzf - -C "$prefix/bin"
 }
 
