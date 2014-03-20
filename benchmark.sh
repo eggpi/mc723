@@ -1,5 +1,5 @@
 RESULTSD=results.$$
-REPETITIONS=100
+REPETITIONS=60
 
 function install_lame() {
     srcdir="$1"
